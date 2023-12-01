@@ -1,0 +1,15 @@
+id:@p:aoc2023:r:2cfca1b3-a1bb49d7 "day1"
+name:day1
+func
+mod:2023-12-01T13:53:14.719Z
+src:
+  () => do
+  
+    ioReadLines(`io/day 1/input`)
+    .map(line => do
+        digits: "[0-9]".reFindAll(line)
+        [digits.first, digits.last].concat.parseNumber
+      end)
+    .fold(sum)
+  
+  end
