@@ -1,0 +1,28 @@
+id:@p:aoc2023:r:2cfcd36c-a1af0e52 "day1_2"
+name:day1_2
+func
+mod:2023-12-01T17:51:14.511Z
+src:
+  () => do
+  
+    ioReadLines(`io/day 1/input`)
+    .map(line => do
+        { 
+          "one":"o1e", 
+          "two":"t2o", 
+          "three":"t3e", 
+          "four":"f4", 
+          "five": "f5e", 
+          "six": "s6", 
+          "seven":"s7n", 
+          "eight":"e8t", 
+          "nine":"n9"
+        }
+        .each() (v,k) => line = line.replace(k,v)
+        
+        digits: "[0-9]".reFindAll(line)
+        [digits.first, digits.last].concat.parseNumber
+      end)
+    .fold(sum)
+    
+  end
