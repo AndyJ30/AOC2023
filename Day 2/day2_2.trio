@@ -1,0 +1,36 @@
+name:day2_2
+func
+mod:2023-12-03T09:31:38.847Z
+src:
+  () => do
+    cubes: {
+      red:12,
+      green:13,
+      blue:14
+    }
+    
+    ioReadLines(`io/Day 2/input`)
+    .map(game => do
+      gameNumber: game.split(":")[0][5..-1].parseNumber
+  
+      handfuls: game.split(":")[1].split(";")
+        .map(handful => do
+          result : {}
+  
+          handful.split(",")
+          .each() handful => result = result.set(handful.split(" ")[1],handful.split(" ")[0].parseNumber)
+  
+          result
+        end)
+        .toGrid
+  
+      game = {gameNumber: gameNumber}
+      cubes.each() (v,k) => game = game.set(k, handfuls.foldCol(k, max))
+  
+      game.set("power", game->red * game->green * game->blue)
+  
+    end)
+    .toGrid
+    .foldCol("power", sum)
+     
+  end

@@ -1,0 +1,32 @@
+name:day2_1
+func
+mod:2023-12-03T09:34:31.398Z
+src:
+  () => do
+    cubes: {
+      red:12,
+      green:13,
+      blue:14
+    }
+    
+    ioReadLines(`io/Day 2/input`)
+    .map(game => do
+      gameNumber: game.split(":")[0][5..-1].parseNumber
+      
+      handfuls: game.split(":")[1].split(";")
+        .map(handful => do
+          result : {}
+  
+          handful.split(",")
+          .each() handful => result = result.set(handful.split(" ")[1],handful.split(" ")[0].parseNumber)
+  
+          result
+        end)
+  
+      {gameNumber: gameNumber, handfuls: handfuls}
+    end)
+    .findAll(game => game->handfuls.all(handful => handful.all((count, color) => cubes[color] >= count)))
+    .toGrid
+    .foldCol("gameNumber", sum)
+     
+  end
