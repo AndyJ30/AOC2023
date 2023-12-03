@@ -1,0 +1,70 @@
+name:day3_1
+func
+mod:2023-12-03T21:57:49.568Z
+src:
+  () => do
+    
+    schematic: ioReadLines(`io/Day 3/input`)
+    partNumbers: []
+    
+    //isSymbol: return true for all chars other than 0-9 or "." 
+    isSymbol: c => not(c.isDigit) and not(c == 46)
+  
+    //getBoundingBox: return a box surrounding the number at the given location, clipped to the bounds of the schematic.
+    getBoundingBox: (number, schematic, row, col) => do
+      minX: 0
+      minY: 0
+      maxX: schematic[0].size - 1
+      maxY: schematic.size - 1
+      
+      x1: (col - 1)
+      y1: (row - 1)
+      x2: (col - 1 + number.size + 1)
+      y2: (y1 + 2)
+  
+      if (x1 < minX) x1 = minX
+      if (y1 < minY) y1 = minY
+      if (x2 > maxX) x2 = maxX
+      if (y2 > maxY) y2 = maxY
+      
+      {x1: x1, y1: y1, x2: x2, y2: y2,}
+    end
+  
+    //adjacentToSymbol: return true if the number at the given location is adjacent to a symbol in any direction.
+    adjacentToSymbol: (number, schematic, row, col) => do
+      boundingBox: getBoundingBox(number, schematic, row, col)
+      foundSymbol: false
+      
+      //check all chars within the bounding box for a symbol
+      //TODO: only need to check the perimeter.
+      (boundingBox->y1..boundingBox->y2).each(y => do
+        if (foundSymbol) return null
+        (boundingBox->x1..boundingBox->x2).each(x => do
+          if (foundSymbol) return null
+          if (schematic[y][x].isSymbol) foundSymbol = true
+        end)
+      end)
+      
+      foundSymbol
+    end
+    
+    //get the result:
+    numBuffer: ""
+    
+    schematic
+    .map(line => line + ".") //TODO: Fix code not finding numbers at the end of lines!
+    .each((row, y) => do
+      row.each((charCode, x) => do
+        //loop over each char until we hit the end of a number
+        if (charCode.isDigit()) numBuffer = numBuffer + charCode.toChar
+        else if (numBuffer != "") do
+          //check if the number is adjacent to a symbol, and add it to the list of part numbers if so.
+          if (numBuffer.adjacentToSymbol(schematic, y, x-numBuffer.size)) partNumbers = partNumbers.add(numBuffer.parseNumber)
+          numBuffer = ""
+        end
+      end)
+    end)
+  
+    partNumbers.fold(sum)
+    
+  end
