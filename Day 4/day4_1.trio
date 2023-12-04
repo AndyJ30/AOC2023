@@ -1,0 +1,26 @@
+name:day4_1
+func
+mod:2023-12-04T14:15:19.591Z
+src:
+  () => do
+    cards: ioReadLines(`io/Day 4/input`)
+      .map(line => do
+        groups: r"Card\s+(\d+): (.*) \| (.*)".reGroups(line.replace("  ", " "))
+        
+        cardNumber: groups[1].parseNumber
+        winners: groups[2].split(" ").map(n => n.parseNumber)
+        numbers: groups[3].split(" ").map(n => n.parseNumber)
+        matches: numbers.findAll(n => winners.contains(n))
+        score: if (matches.isEmpty) 0 else 2.pow(matches.size-1)
+        {
+          card: cardNumber,
+          winners: winners,
+          numbers: numbers,
+          matches: matches.size,
+          score: score
+        }
+      end)
+      .toGrid()
+      
+      cards.foldCol("score", sum)
+  end
